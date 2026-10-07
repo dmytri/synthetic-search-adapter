@@ -79,10 +79,14 @@ omp config set modelRoles '{"default":"synthetic/hf:zai-org/GLM-5.3-Flash","web"
 omp re-reads its config live, so running sessions pick this up without a restart.
 Nested form (`omp config set modelRoles.web …`) does **not** work — set the whole record.
 
-### bb (optional)
+### bb (optional, non-critical)
 
-Install the plugin from `dmytri/bb-plugin-synthetic-search` (points at
-`/v2/search`). Droppable — bb's only agent provider is omp anyway.
+A **local-only** plugin at `~/bb-plugin-synthetic-search/` (its own git repo, not
+on GitHub) adds `bb synthetic-search`, which calls the adapter's `/v2/search`.
+
+Droppable — nothing here depends on it, and bb's only agent provider is omp,
+which searches Synthetic natively anyway. The plugin's README has the purge
+commands.
 
 ## 3. Verify
 

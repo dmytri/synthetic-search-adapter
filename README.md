@@ -39,22 +39,26 @@ search snippets.
 ## Install
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/dmytri/synthetic-search-adapter/main/install.sh | sudo bash
-```
-
-The installer builds (or downloads) the binary to `/usr/local/bin`, writes a
-600-mode key file to `/etc/synthetic-search-adapter/adapter.env`, installs a
-hardened systemd unit, and starts the service.
-
-From a checkout:
-
-```sh
-make build && sudo make install
+git clone https://github.com/dmytri/synthetic-search-adapter
+cd synthetic-search-adapter
+make build
+sudo make install          # binary -> /usr/local/bin, unit -> /etc/systemd/system
 sudoedit /etc/synthetic-search-adapter/adapter.env   # set SYNTHETIC_API_KEY
 sudo systemctl enable --now synthetic-search-adapter
+./smoke.sh                 # verify every route
 ```
 
+`make install` is idempotent and never overwrites an existing key file.
+Update with `git pull && make build && sudo make install && sudo systemctl restart synthetic-search-adapter`.
+Remove with `sudo make uninstall`.
+
+Running this as part of the full search stack (Open WebUI + cptr + omp)?
+See **[STACK.md](STACK.md)** for the end-to-end runbook and
+`deploy/wire-apps.sh` to configure the apps automatically.
+
 ## Configure clients
+
+Exact commands for each app are in [STACK.md](STACK.md). Summary:
 
 **Open WebUI** — Admin Settings → Web Search → engine **external**,
 URL `http://127.0.0.1:8010/external`. (Or set `EXTERNAL_WEB_SEARCH_URL`.)
@@ -93,8 +97,12 @@ make vet          # static checks
 ADAPTER=http://127.0.0.1:8010 ./smoke.sh   # route/shape smoke test (running service)
 ```
 
-`deploy/` holds deployment-specific integration tests that assume Open WebUI,
-cptr and omp run on the same host; they are not needed to use the adapter.
+`deploy/` holds deployment tooling that assumes Open WebUI, cptr and omp run on
+the same host — not needed to use the adapter by itself:
+
+- `wire-apps.sh` — point the apps at the adapter (idempotent)
+- `verify.sh` — end-to-end check across all apps
+- `run-tests.sh` — the assertion suite (URL-overlap with Synthetic)
 
 ## Why Go
 

@@ -1,0 +1,12 @@
+# Build artifacts
+/synthetic-search-adapter
+/dist/
+
+# Secrets — NEVER commit
+adapter.env
+*.env
+!adapter.env.example
+
+# Editor/OS
+.DS_Store
+*.swp

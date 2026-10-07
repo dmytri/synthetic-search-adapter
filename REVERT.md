@@ -25,7 +25,6 @@ Remove the `web: synthetic` line from modelRoles in ~/.omp/agent/config.yml
     rm -rf /home/exedev/bb-plugin-synthetic-search   # source dir (optional)
 
 ## 5. Stop & remove the adapter service
-    sudo systemctl disable --now synthetic-search-adapter.service
-    sudo rm /etc/systemd/system/synthetic-search-adapter.service
-    sudo systemctl daemon-reload
-    rm -rf /home/exedev/synthetic-search-adapter     # binary, key, source (optional)
+    sudo make uninstall                  # from ~/synthetic-search-adapter
+    sudo rm -rf /etc/synthetic-search-adapter    # removes the API key file
+(the source checkout at ~/synthetic-search-adapter can stay; it is just a git repo)
